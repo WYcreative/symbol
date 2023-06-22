@@ -1,0 +1,114 @@
+{
+  "name": "@wycreative/symbol",
+  "version": "0.0.0",
+  "description": "Use SVG symbols in your project easily.",
+  "keywords": [
+    "component",
+    "design system",
+    "svg",
+    "symbol",
+    "ui kit"
+  ],
+  "author": "WYcreative Engineering Team",
+  "license": "ISC",
+  "type": "module",
+  "exports": {
+    ".": {
+      "pug": "./src/views/index.pug"
+    },
+    "./*": {
+      "pug": "./src/views/*"
+    }
+  },
+  "engines": {
+    "gulp-cli": ">=2.3",
+    "node": ">=18.16",
+    "npm": ">=9.5"
+  },
+  "scripts": {
+    "start": "gulp",
+    "serve": "gulp serve",
+    "test": "xo",
+    "dist": "gulp dist",
+    "clean": "gulp clean",
+    "release": "np"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wycreative/symbol"
+  },
+  "homepage": "https://wycreative.github.io/symbol",
+  "dependencies": {},
+  "devDependencies": {
+    "browser-sync": "^2.29.3",
+    "del": "^7.0.0",
+    "glob-parent": "^6.0.2",
+    "globby": "^13.2.0",
+    "gulp": "^4.0.2",
+    "gulp-imagemin": "^8.0.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-pug": "^5.0.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-svgstore": "^9.0.0",
+    "gulp-tap": "^2.0.0",
+    "jsdom": "^22.1.0",
+    "np": "^8.0.4",
+    "pug-walk": "^2.0.0",
+    "read-pkg-up": "^9.1.0",
+    "resolve.exports": "^2.0.2",
+    "xo": "^0.54.2"
+  },
+  "browserslist": [
+    "defaults and last 2 years",
+    "not op_mob >= 0"
+  ],
+  "babel": {
+    "presets": [
+      [
+        "@babel/env",
+        {
+          "modules": false
+        }
+      ]
+    ],
+    "only": [
+      "./@(config|data|src)/**"
+    ]
+  },
+  "xo": {
+    "envs": [
+      "browser",
+      "node"
+    ],
+    "rules": {
+      "no-multiple-empty-lines": [
+        "warn",
+        {
+          "max": 3
+        }
+      ],
+      "import/order": [
+        "error",
+        {
+          "newlines-between": "always"
+        }
+      ],
+      "no-console": [
+        "error",
+        {
+          "allow": [
+            "info",
+            "warn",
+            "error"
+          ]
+        }
+      ]
+    }
+  },
+  "np": {
+    "message": "DIST - v%s"
+  },
+  "genesis": {
+    "version": "2.2.0"
+  }
+}
