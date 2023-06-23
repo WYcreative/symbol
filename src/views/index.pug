@@ -1,0 +1,78 @@
+-
+	const __symbol_defaults = {
+		path: undefined,
+		file: undefined,
+	}
+
+
+
+
+//- @pugdoc
+	Creates an SVG symbol.
+
+	@param {String} [file] - The SVG file containing the symbol.
+		If the value doesn't start with `/`, `./`, or `../`, it will have the value defined in `__symbol_defaults.path` prepended to it.
+		If no file is defined, the filename defined in `__symbol_defaults.file` will be used instead.
+		The `.svg` extension is appended automatically, if not specified.
+	@param {String} id - The symbol ID.
+	@param {Number | Length | Percentage} [width] - The width of the SVG element.
+	@param {Number | Length | Percentage} [height = width] - The height of the SVG element.
+
+	@attributes * - The attributes for the `svg` element.
+
+	@returns {SVGElement} The SVG symbol instance.
+
+mixin symbol(file, id, width, height)
+
+	//- Validate and normalize arguments.
+	//- ----------------------------------------------------------------------------
+
+	//- Only accept strings in `file`.
+	if typeof file !== 'string'
+		- throw new TypeError(`[Symbol Mixin]\n  The argument 'file' only accepts strings. Got the ${typeof file} \`${file}\`.`)
+
+	//- Reorganize arguments, if first one is used as `id`.
+	//- First argument is considered an id if:
+	//-   - Doesn't contain slashes or periods;
+	//-   - The second argument is undefined, a number, or a string of a number, length, or percentage.
+	if /[\/.]/.test(file) === false && (['undefined', 'number'].includes(typeof id) || /^(?:\d*\.)?\d+(%|[a-zA-Z]+)?$/.test(id))
+		//- Throw if no `file` is used as `id` without having defaults configured.
+		if !__symbol_defaults.file && !(__symbol_defaults.path && __symbol_defaults.file)
+			- throw new TypeError(`[Symbol Mixin]\n  The arguments 'file' and 'id' must be defined if no default 'file', or both 'path' and 'file' are configured.\n    Arguments:\n      file: \`${file}\`\n      id: \`${id}\`.\n    Defaults:\n      path: \`${__symbol_defaults.path}\`\n      file: \`${__symbol_defaults.file}\``)
+
+		- [file, id, width, height] = [undefined, file, id, width]
+
+	//- If no file is defined, fallback to default filename.
+	if typeof file === 'undefined' && __symbol_defaults.file
+		- file = __symbol_defaults.file
+
+	//- If file has no path defined, fallback to default path.
+	if /^\.{0,2}\//.test(file) === false && __symbol_defaults.path
+		- file = `${__symbol_defaults.path}/${file}`
+
+	//- If file doesn't end with the SVG extension, append it.
+	if file.endsWith('.svg') === false
+		- file += '.svg'
+
+	//- If no height is defined, make it the same as width.
+	if typeof width !== 'undefined' && typeof height === 'undefined'
+		- height = width
+
+	//- Define width and height attributes.
+	each value, name in {width, height}
+		//- Don't allow both arguments and attributes being defined simultaneously for width and height.
+		if attributes[name]
+			- throw new Error(`[Symbol Mixin] The argument '${name}' and the attribute '${name}' are both defined (\`${value}\` and \`${attributes[name]}\`). You should use only one.`)
+
+		else if value
+			- attributes[name] = value
+
+	//- Add `aria-hidden` if no other ARIA attribute is added.
+	if Object.entries(attributes).some(([attribute, value]) => attribute.startsWith('aria-') && value) === false
+		- attributes['aria-hidden'] = 'true'
+
+
+	//- Output result.
+	//- ----------------------------------------------------------------------------
+	svg&attributes(attributes)
+		use(href=`${file}#${id}`)

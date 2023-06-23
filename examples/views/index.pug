@@ -3,4 +3,9 @@ extends _layouts/base
 
 
 block body
-	h1 Welcome to the Symbol example!
+	- __symbol_defaults.path = '/examples/assets/images'
+	- __symbol_defaults.file = 'symbols'
+
+	+symbol('cross')
+	+symbol('symbols2', 'dot', 24)
+	+symbol('symbols2/symbols3', 'star', 32, 24).custom-class(aria-label="Star")
