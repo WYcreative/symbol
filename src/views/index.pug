@@ -36,7 +36,7 @@ mixin symbol(file, id, width, height)
 	//-   - Doesn't contain slashes or periods;
 	//-   - The second argument is undefined, a number, or a string of a number, length, or percentage.
 	if /[\/.]/.test(file) === false && (['undefined', 'number'].includes(typeof id) || /^(?:\d*\.)?\d+(%|[a-zA-Z]+)?$/.test(id))
-		//- Throw if no `file` is used as `id` without having defaults configured.
+		//- Throw if `file` is used as `id` without having defaults configured.
 		if !__symbol_defaults.file && !(__symbol_defaults.path && __symbol_defaults.file)
 			- throw new TypeError(`[Symbol Mixin]\n  The arguments 'file' and 'id' must be defined if no default 'file', or both 'path' and 'file' are configured.\n    Arguments:\n      file: \`${file}\`\n      id: \`${id}\`.\n    Defaults:\n      path: \`${__symbol_defaults.path}\`\n      file: \`${__symbol_defaults.file}\``)
 
