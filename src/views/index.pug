@@ -11,7 +11,7 @@
 	Creates an SVG symbol.
 
 	@param {String} [file] - The SVG file containing the symbol.
-		If the value doesn't start with `/`, `./`, or `../`, it will have the value defined in `__symbol_defaults.path` prepended to it.
+		If the value doesn't start with `http://`, `https://`, `/`, `./`, or `../`, it will have the value defined in `__symbol_defaults.path` prepended to it.
 		If no file is defined, the filename defined in `__symbol_defaults.file` will be used instead.
 		The `.svg` extension is appended automatically, if not specified.
 	@param {String} id - The symbol ID.
@@ -47,7 +47,7 @@ mixin symbol(file, id, width, height)
 		- file = __symbol_defaults.file
 
 	//- If file has no path defined, fallback to default path.
-	if /^\.{0,2}\//.test(file) === false && __symbol_defaults.path
+	if /^(?:https?:\/|\.{0,2})\//.test(file) === false && __symbol_defaults.path
 		- file = `${__symbol_defaults.path}/${file}`
 
 	//- If file doesn't end with the SVG extension, append it.
