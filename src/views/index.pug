@@ -31,10 +31,10 @@ mixin symbol(file, id, width, height)
 	if typeof file !== 'string'
 		- throw new TypeError(`[Symbol Mixin]\n  The argument 'file' only accepts strings. Got the ${typeof file} \`${file}\`.`)
 
-	//- Reorganize arguments, if first one is used as `id`.
-	//- First argument is considered an id if:
+	//- Reorganize arguments, if the first one is used as `id`.
+	//- First argument is considered an ID if:
 	//-   - Doesn't contain slashes or periods;
-	//-   - The second argument is undefined, a number, or a string of a number, length, or percentage.
+	//-   - The second argument is `undefined`, a number, or a string of a number, length, or percentage.
 	if /[\/.]/.test(file) === false && (['undefined', 'number'].includes(typeof id) || /^(?:\d*\.)?\d+(%|[a-zA-Z]+)?$/.test(id))
 		//- Throw if `file` is used as `id` without having defaults configured.
 		if !__symbol_defaults.file && !(__symbol_defaults.path && __symbol_defaults.file)
@@ -42,32 +42,32 @@ mixin symbol(file, id, width, height)
 
 		- [file, id, width, height] = [undefined, file, id, width]
 
-	//- If no file is defined, fallback to default filename.
+	//- If `file` is not defined, fallback to the default filename.
 	if typeof file === 'undefined' && __symbol_defaults.file
 		- file = __symbol_defaults.file
 
-	//- If file has no path defined, fallback to default path.
+	//- If `file` has no path defined, fallback to the default path.
 	if /^(?:https?:\/|\.{0,2})\//.test(file) === false && __symbol_defaults.path
 		- file = `${__symbol_defaults.path}/${file}`
 
-	//- If file doesn't end with the SVG extension, append it.
+	//- If `file` doesn't end with the SVG extension, append it.
 	if file.endsWith('.svg') === false
 		- file += '.svg'
 
-	//- If no height is defined, make it the same as width.
+	//- If `height` is not defined, make it the same as `width`.
 	if typeof width !== 'undefined' && typeof height === 'undefined'
 		- height = width
 
-	//- Define width and height attributes.
+	//- Define `width` and `height` attributes.
 	each value, name in {width, height}
-		//- Don't allow both arguments and attributes being defined simultaneously for width and height.
+		//- Don't allow `width` or `height` to be defined as argument and attribute simultaneously.
 		if attributes[name]
-			- throw new Error(`[Symbol Mixin] The argument '${name}' and the attribute '${name}' are both defined (\`${value}\` and \`${attributes[name]}\`). You should use only one.`)
+			- throw new Error(`[Symbol Mixin]\n  The argument '${name}' and the attribute '${name}' are both defined. You should use only one.\n    Argument: \`${value}\`\n    Attribute: \`${attributes[name]}\``)
 
 		else if value
 			- attributes[name] = value
 
-	//- Add `aria-hidden` if no other ARIA attribute is added.
+	//- Add `aria-hidden` if no other ARIA attribute is present.
 	if Object.entries(attributes).some(([attribute, value]) => attribute.startsWith('aria-') && value) === false
 		- attributes['aria-hidden'] = 'true'
 
