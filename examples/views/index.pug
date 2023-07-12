@@ -6,6 +6,19 @@ block body
 	- __symbol_defaults.path = '/examples/assets/images'
 	- __symbol_defaults.file = 'symbols'
 
-	+symbol('cross')
-	+symbol('symbols2', 'dot', 24)
-	+symbol('symbols2/symbols3', 'star', 32, 24).custom-class(aria-label="Star")
+	+symbol({
+		id: 'cross',
+	})
+
+	+symbol({
+		file: 'symbols2',
+		id: 'dot',
+		width: 24,
+	})
+
+	+symbol({
+		file: 'symbols2/symbols3',
+		id: 'star',
+		width: 32,
+		height: 24,
+	}).custom-class(aria-label="Star")

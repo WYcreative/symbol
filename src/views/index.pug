@@ -6,63 +6,63 @@
 
 
 
-
 //- @pugdoc
 	Creates an SVG symbol.
 
-	@param {String} [file] - The SVG file containing the symbol.
+	@param {Object} - The symbol options.
+	@param {String} [options.file] - The SVG file containing the symbol.
 		If the value doesn't start with `http://`, `https://`, `/`, `./`, or `../`, it will have the value defined in `__symbol_defaults.path` prepended to it.
 		If no file is defined, the filename defined in `__symbol_defaults.file` will be used instead.
 		The `.svg` extension is appended automatically, if not specified.
-	@param {String} id - The symbol ID.
-	@param {Number | Length | Percentage} [width] - The width of the SVG element.
-	@param {Number | Length | Percentage} [height = width] - The height of the SVG element.
+	@param {String} options.id - The symbol ID.
+	@param {Number | Length | Percentage} [options.width] - The width of the SVG element.
+	@param {Number | Length | Percentage} [options.height = width] - The height of the SVG element.
 
 	@attributes * - The attributes for the `svg` element.
 
 	@returns {SVGElement} The SVG symbol instance.
 
-mixin symbol(file, id, width, height)
+mixin symbol(options)
+
+	//- Assign defaults.
+	//- ----------------------------------------------------------------------------
+	- options = Object.assign({}, __symbol_defaults, options)
+
 
 	//- Validate and normalize arguments.
 	//- ----------------------------------------------------------------------------
 
-	//- Only accept strings in `file`.
-	if typeof file !== 'string'
-		- throw new TypeError(`[Symbol Mixin]\n  The argument 'file' only accepts strings. Got the ${typeof file} \`${file}\`.`)
+	//- Ensure that `options.file` or related defaults are defined.
+	if typeof options.file !== 'string' && !(options.file === undefined && __symbol_defaults.path && __symbol_defaults.file)
+		- throw new TypeError(`[Symbol Mixin]\n  The property 'options.file' must be defined if no default 'file', or both 'path' and 'file' are configured.\n    Arguments:\n      file: \`${options.file}\`\n    Defaults:\n      path: \`${__symbol_defaults.path}\`\n      file: \`${__symbol_defaults.file}\``)
 
-	//- Reorganize arguments, if the first one is used as `id`.
-	//- First argument is considered an ID if:
-	//-   - Doesn't contain slashes or periods;
-	//-   - The second argument is `undefined`, a number, or a string of a number, length, or percentage.
-	if /[\/.]/.test(file) === false && (['undefined', 'number'].includes(typeof id) || /^(?:\d*\.)?\d+(%|[a-zA-Z]+)?$/.test(id))
-		//- Throw if `file` is used as `id` without having defaults configured.
-		if !__symbol_defaults.file && !(__symbol_defaults.path && __symbol_defaults.file)
-			- throw new TypeError(`[Symbol Mixin]\n  The arguments 'file' and 'id' must be defined if no default 'file', or both 'path' and 'file' are configured.\n    Arguments:\n      file: \`${file}\`\n      id: \`${id}\`.\n    Defaults:\n      path: \`${__symbol_defaults.path}\`\n      file: \`${__symbol_defaults.file}\``)
-
-		- [file, id, width, height] = [undefined, file, id, width]
-
-	//- If `file` is not defined, fallback to the default filename.
-	if typeof file === 'undefined' && __symbol_defaults.file
-		- file = __symbol_defaults.file
+	//- If `options.file` is not defined, fallback to the default filename.
+	if typeof options.file === 'undefined'
+		if typeof __symbol_defaults.file === 'string'
+			- options.file = __symbol_defaults.file
+		else
+			- throw new TypeError(`[Symbol Mixin]\n  The property 'options.file' is not defined and the default 'file' is not configured. Got the string \`${options.file}\`.`)
 
 	//- If `file` has no path defined, fallback to the default path.
-	if /^(?:https?:\/|\.{0,2})\//.test(file) === false && __symbol_defaults.path
-		- file = `${__symbol_defaults.path}/${file}`
+	if /^(?:https?:\/|\.{0,2})\//.test(options.file) === false
+		if typeof __symbol_defaults.path === 'string'
+			- options.file = `${__symbol_defaults.path}/${options.file}`
+		else
+			- throw new TypeError(`[Symbol Mixin]\n  The property 'options.file' has no explicit path and the default 'path' is not configured.\n    Properties:\n      file: \`${options.file}\`\n    Defaults:\n      path: \`${__symbol_defaults.path}\``)
 
 	//- If `file` doesn't end with the SVG extension, append it.
-	if file.endsWith('.svg') === false
-		- file += '.svg'
+	if options.file.endsWith('.svg') === false
+		- options.file += '.svg'
 
 	//- If `height` is not defined, make it the same as `width`.
-	if typeof width !== 'undefined' && typeof height === 'undefined'
-		- height = width
+	if typeof options.width !== 'undefined' && typeof options.height === 'undefined'
+		- options.height = options.width
 
 	//- Define `width` and `height` attributes.
-	each value, name in {width, height}
+	each value, name in {width: options.width, height: options.height}
 		//- Don't allow `width` or `height` to be defined as argument and attribute simultaneously.
 		if attributes[name]
-			- throw new Error(`[Symbol Mixin]\n  The argument '${name}' and the attribute '${name}' are both defined. You should use only one.\n    Argument: \`${value}\`\n    Attribute: \`${attributes[name]}\``)
+			- throw new Error(`[Symbol Mixin]\n  The property 'options.${name}' and the attribute '${name}' are both defined. You should use only one.\n    Property: \`${value}\`\n    Attribute: \`${attributes[name]}\``)
 
 		else if value
 			- attributes[name] = value
@@ -75,4 +75,4 @@ mixin symbol(file, id, width, height)
 	//- Output result.
 	//- ----------------------------------------------------------------------------
 	svg&attributes(attributes)
-		use(href=`${file}#${id}`)
+		use(href=`${options.file}#${options.id}`)
