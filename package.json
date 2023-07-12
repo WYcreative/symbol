@@ -46,7 +46,7 @@
     "browser-sync": "^2.29.3",
     "del": "^7.0.0",
     "glob-parent": "^6.0.2",
-    "globby": "^13.2.0",
+    "globby": "^13.2.2",
     "gulp": "^4.0.2",
     "gulp-imagemin": "^8.0.0",
     "gulp-plumber": "^1.2.1",
@@ -57,7 +57,7 @@
     "jsdom": "^22.1.0",
     "np": "^8.0.4",
     "pug-walk": "^2.0.0",
-    "read-pkg-up": "^9.1.0",
+    "read-pkg-up": "^10.0.0",
     "resolve.exports": "^2.0.2",
     "xo": "^0.54.2"
   },
@@ -112,6 +112,6 @@
     "message": "DIST - v%s"
   },
   "genesis": {
-    "version": "2.2.0"
+    "version": "3.0.0"
   }
 }

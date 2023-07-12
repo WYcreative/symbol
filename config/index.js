@@ -6,12 +6,12 @@ import {join} from 'node:path/posix';
 // TODO: Use import assertions once they become stable.
 const pkg = createRequire(import.meta.url)('../package.json');
 
-const src = './src';
-const examples = './examples';
-const build = './build';
-const dist = './dist';
+const src = './src/';
+const examples = './examples/';
+const build = './build/';
+const dist = './dist/';
 
-const examplesPath = 'examples';
+const examplesPath = 'examples/';
 
 const config = {
 	name: pkg.name,
@@ -26,10 +26,12 @@ const config = {
 		},
 	},
 	src: {
+		base: src,
 		symbols: join(src, 'symbols/**/*.svg'),
 		views: join(src, 'views/**/*.pug'),
 	},
 	examples: {
+		base: examples,
 		symbols: join(examples, 'symbols/**/*.svg'),
 		views: [
 			join(examples, 'views/**/*.pug'),

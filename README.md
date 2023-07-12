@@ -28,4 +28,4 @@ Command | Description
 
 ## Genesis
 
-This project was generated with [Genesis](https://github.com/WYcreative/genesis) 2.2.0.
+This project was generated with [Genesis](https://github.com/WYcreative/genesis) 3.0.0.

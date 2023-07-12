@@ -1,4 +1,4 @@
-import {dirname, join, relative, sep} from 'node:path/posix';
+import {dirname, join, relative} from 'node:path/posix';
 import {cwd} from 'node:process';
 
 import browserSync from 'browser-sync';
@@ -26,14 +26,6 @@ function getDirectory(path, parentLevel = 1) {
 	}
 
 	return path;
-}
-
-
-
-function getRelativePath(path, reference) {
-	path = relative(dirname(reference), path);
-
-	return (/^\.?\.\//.test(path) ? '' : `.${path.startsWith(sep) ? '' : sep}`) + path;
 }
 
 
@@ -68,6 +60,5 @@ function resolveTildePath(url, filename, language) {
 export {
 	getBrowserSync,
 	getDirectory,
-	getRelativePath,
 	resolveTildePath,
 };
